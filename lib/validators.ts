@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { formatNumberWithDecimalPlaces } from "./utils";
+import { PAYMENT_METHODS } from "./constants";
 
 const currency = z
   .string()
@@ -42,3 +43,81 @@ export const signUpFormSchema = z.object({
       message: "Passwords do not match",
       path: ["confirmPassword"],
 });
+
+// Cart Schemas
+export const cartItemSchema = z.object({
+  productId: z.string().min(1, "Product is required"),
+  name: z.string().min(1, "Name is required"),
+  slug: z.string().min(1, "Slug is required"),
+  qty: z.number().int().nonnegative("Quantity must be a positive number"),
+  image: z.string().min(1, "Image is required"),
+  price: currency,
+});
+
+export const insertCartSchema = z.object({
+  items: z.array(cartItemSchema),
+  itemsPrice: currency,
+  shippingPrice: currency,
+  taxPrice: currency,
+  totalPrice: currency,
+  sessionCartId: z.string().min(1, "Session cart id is required"),
+  userId: z.string().optional().nullable(),
+});
+
+// Schema for shipping address
+
+export const shippingAddressSchema = z.object({
+  fullName: z.string().min(3, "Name must be at least 3 characters long"),
+  streetAddress: z.string().min(3, "Address must be at least 3 characters long"),
+  city: z.string().min(3, "City must be at least 3 characters long"),
+  postalCode: z.string().min(3, "Postal code must be at least 3 characters long"),
+  country: z.string().min(3, "Country must be at least 3 characters long"),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
+});
+
+// Schema for payment method
+export const paymentMethodSchema = z.object({
+  type: z.string().min(1, "Payment method is required"),
+}).refine((data) => PAYMENT_METHODS.includes(data.type), {
+  path: ["type"],
+  message: `Invalid payment method.`,
+});
+
+
+// Schema for inserting order
+export const insertOrderSchema = z.object({
+  userId: z.string().min(1, "User id is required"),
+  itemsPrice: currency,
+  shippingPrice: currency,
+  taxPrice: currency,
+  totalPrice: currency,
+  shippingAddress: shippingAddressSchema,
+  paymentMethod: z.string().refine((data)=> PAYMENT_METHODS.includes(data), {
+    message: `Invalid payment method.`, 
+  }),
+})
+
+// Schema for inserting an order item
+export const orderItemSchema = z.object({
+  productId: z.string(),
+  slug: z.string(),
+  image: z.string(),
+  name: z.string(),
+  price: currency,
+  qty: z.number(),
+})
+
+export const paymentResultSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  email_address: z.string(),
+  pricePaid: z.string(),
+  update_time: z.string(),
+});
+
+// Schema for updating user profile
+export const updateProfileSchema = z.object({
+  name: z.string().min(3, "Name must be at least 3 characters long"),
+  email: z.string().min(3, "Email must be at least 3 characters long"),
+})
