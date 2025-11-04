@@ -11,8 +11,9 @@ import { updateOrderToPaidCOD, deliverOrder } from "@/lib/actions/order.actions"
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import StripePayment from "./stripe-payment";
 
-const OrderDetailsTable = ({ order, isAdmin }: { order: Order, isAdmin: boolean }) => {
+const OrderDetailsTable = ({ order, isAdmin, stripteClientSecret }: { order: Order, isAdmin: boolean, stripteClientSecret: string | null }) => {
   const {
     id,
     shippingAddress,
@@ -160,6 +161,12 @@ const OrderDetailsTable = ({ order, isAdmin }: { order: Order, isAdmin: boolean 
                         <div>Total</div>
                         <div>{formatCurrency(totalPrice)}</div>
                     </div>
+                    {/* Stripe */}
+                    {
+                      !isPaid && paymentMethod === "Stripe" && stripteClientSecret && (
+                        <StripePayment priceInCents={Number(order.totalPrice) * 100} orderId={order.id} clientSecret={stripteClientSecret} />
+                      )
+                    }
                     {/* Cash on delivery */}
                     {
                       isAdmin && !isPaid && paymentMethod === "CashOnDelivery" && (

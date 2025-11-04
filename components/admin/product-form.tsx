@@ -31,7 +31,9 @@ const ProductForm = ({
   const router = useRouter();
   const schema = type === "Update" ? updateProductSchema : insertProductSchema;
   const form = useForm({
-    resolver: zodResolver(schema),
+    resolver: type === 'Update'
+        ? zodResolver(updateProductSchema)
+        : zodResolver(insertProductSchema),
     defaultValues: product && type === "Update" ? product : productDefaultValues,
   });
   const onSubmit: SubmitHandler<z.infer<typeof insertProductSchema>> = async (values) => {
@@ -71,7 +73,7 @@ const ProductForm = ({
             <FormField
                 control={form.control}
                 name="name"
-                render={({field}: {field: ControllerRenderProps<z.infer<typeof insertProductSchema>, "name">}) => (
+                render={({field}: {field: ControllerRenderProps<z.infer<typeof insertProductSchema>, "name" >}) => (
                     <FormItem className="w-full">
                         <FormLabel>Name</FormLabel>
                         <FormControl>

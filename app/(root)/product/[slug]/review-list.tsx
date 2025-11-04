@@ -26,7 +26,6 @@ const RevviewList = ({
     useEffect(()=>{
         const loadReviews = async () => {
             const res = await getReviews({productId});
-            console.log("===================")
             setReviews(res.data);
         }
         loadReviews();
