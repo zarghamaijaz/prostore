@@ -10,10 +10,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const config = {
-  trustedHosts: [
-    "prostore-jzlf.onrender.com",
-    "localhost", // optional, for local dev
-  ],
+  trustHost:true,
   pages: {
     signIn: "/sign-in",
     error: "/sign-in",
