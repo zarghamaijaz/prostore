@@ -11,6 +11,7 @@ import { NextResponse } from "next/server";
 
 export const config = {
   trustHost:true,
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/sign-in",
     error: "/sign-in",
