@@ -116,7 +116,7 @@ export const paymentResultSchema = z.object({
   status: z.string(),
   email_address: z.string(),
   pricePaid: z.string(),
-  update_time: z.string(),
+  update_time: z.string().optional(),
 });
 
 // Schema for updating user profile

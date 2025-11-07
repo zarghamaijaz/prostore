@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import StripePayment from "./stripe-payment";
 
-const OrderDetailsTable = ({ order, isAdmin, stripteClientSecret }: { order: Order, isAdmin: boolean, stripteClientSecret: string | null }) => {
+const OrderDetailsTable = ({ order, isAdmin, stripteClientSecret }: { order: Omit<Order, "paymentResult">, isAdmin: boolean, stripteClientSecret: string | null }) => {
   const {
     id,
     shippingAddress,
